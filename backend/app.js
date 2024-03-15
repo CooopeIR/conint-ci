@@ -7,8 +7,6 @@ var logger = require('morgan');
 
 var todosRouter = require('./routes/todos');
 
-das ist ein error
-
 var app = express();
 app.use(cors());
 
