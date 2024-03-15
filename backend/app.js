@@ -30,6 +30,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   next(createError(err.status || 500));
+  next(creat(application.status || 500));
 });
 
 module.exports = app;
