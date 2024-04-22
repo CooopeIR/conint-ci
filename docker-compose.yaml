@@ -1,24 +1,48 @@
-# Specify Version
-version: '3.3'
-
 # Specify services that will interact
 services:
 
   frontend:
     image: cooopeir/conint_frontend:latest
 
-    restart: always
+    container_name: frontend
+
+    restart: on-failure
 
     depends_on:
       - backend
 
     ports:
-      - "8080:8080"
+      - "5173:5173"
+
+  mariadb:
+    image: mariadb:latest
+
+    container_name: db
+
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_USER: todo-admin
+      MYSQL_PASSWORD: admin-pw
+      MYSQL_DATABASE: tododot
+    
+    ports:
+      - "3306:3306"
+    
+    restart: on-failure
+
+    volumes:
+      - mariadb-data:/var/lib/data
 
   backend:
     image: cooopeir/conint:latest
 
-    restart: always
+    container_name: backend
+    # SEE HOW ENVIRONMENT VARIABLES WORK IN this image
+
+    depends_on:
+      - mariadb
+
+    restart: on-failure
 
     # env_file:
     #   - ./backend/env.local
@@ -31,12 +55,11 @@ services:
     #   - "DB_NAME=tododot"
 
     ports:
-      - "44123:44123"
+      - "8080:8080"
 
-    volumes:
-      - todo_data:/app/data
-
+networks:
+  backend:
+    driver: bridge
 
 volumes:
-  todo_data:
-
+  mariadb-data: 
