@@ -33,8 +33,12 @@ services:
     volumes:
       - mariadb-data:/var/lib/data
 
+  mariadb:
+    image: mariadb:11.3
+
   backend:
     image: cooopeir/conint:latest
+    # SEE HOW ENVIRONMENT VARIABLES WORK IN this image
 
     container_name: backend
     # SEE HOW ENVIRONMENT VARIABLES WORK IN this image

@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/base:stable
+      - image: cooopeir/
     steps:
       - checkout
       # Replace this with a real test runner invocation
@@ -38,7 +38,8 @@ jobs:
 workflows:
   example:
     jobs:
-      - test
+
+      - test:
       - build:
           requires:
             - test

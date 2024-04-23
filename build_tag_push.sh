@@ -27,4 +27,3 @@ build_tag_push() {
 # Call the function for each folder and image
 build_tag_push "backend" "conint" "latest"
 build_tag_push "frontend" "conint_frontend" "latest"
-
