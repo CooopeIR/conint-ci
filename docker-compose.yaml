@@ -6,7 +6,7 @@ services:
 
     container_name: frontend
 
-    restart: on-failure
+    restart: always
 
     depends_on:
       - backend
@@ -15,9 +15,9 @@ services:
       - "5173:5173"
 
   mariadb:
-    image: mariadb:latest
-
-    container_name: db
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
 
     environment:
       MYSQL_ROOT_PASSWORD: my-secret-pw
@@ -28,13 +28,13 @@ services:
     ports:
       - "3306:3306"
     
-    restart: on-failure
+    restart: always
 
     volumes:
-      - mariadb-data:/var/lib/data
+      - mariadb_volume:/var/lib/mysql
 
-  mariadb:
-    image: mariadb:11.3
+    networks:
+      - backend_mariadb
 
   backend:
     image: cooopeir/conint:latest
@@ -46,24 +46,29 @@ services:
     depends_on:
       - mariadb
 
-    restart: on-failure
+    restart: always
 
     # env_file:
     #   - ./backend/env.local
 
-    # environment:
-    #   - "DB_DIALECT=mariadb"
-    #   - "DB_USER=todo-admin"
-    #   - "DB_PW=admin-pw"
-    #   - "DB_HOST=mariadb:3306"
-    #   - "DB_NAME=tododot"
+    environment:
+      - "DB_DIALECT=mariadb"
+      - "DB_USER=todo-admin"
+      - "DB_PW=admin-pw"
+      - "DB_HOST=mariadb:3306"
+      - "DB_NAME=tododot"
+
+    env_file: 
+      - ./backend/env.local
 
     ports:
       - "8080:8080"
+    
+    networks:
+      - backend_mariadb
 
 networks:
-  backend:
-    driver: bridge
+  backend_mariadb:
 
 volumes:
-  mariadb-data: 
+  mariadb_volume: 

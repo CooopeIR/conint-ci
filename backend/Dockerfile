@@ -1,5 +1,5 @@
 
-FROM node:21-alpine3.18
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -9,12 +9,13 @@ RUN npm install
 
 COPY . /app/
 
-ENV DB_DIALECT=mariadb
-ENV DB_USER=todo-admin
-ENV DB_PW=admin-pw
-ENV DB_HOST=mariadb:3306
-ENV DB_NAME=tododot
+# ENV DB_DIALECT=mariadb
+# ENV DB_USER=todo-admin
+# ENV DB_PW=admin-pw
+# ENV DB_HOST=mariadb:3306
+# ENV DB_NAME=tododot
 
 EXPOSE 3000
+EXPOSE 8080
 
 CMD ["npm", "start"]
