@@ -2,11 +2,7 @@
 services:
 
   frontend:
-    # image: cooopeir/conint_frontend:latest
-
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: cooopeir/conint_frontend:latest
 
     container_name: frontend
 
@@ -19,10 +15,11 @@ services:
       - "5173:5173"
 
   mariadb:
+    image: cooopeir/conint_db:latest
 
-    build:
-      context: ./mariadb
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./mariadb
+    #   dockerfile: Dockerfile
 
     environment:
       MYSQL_ROOT_PASSWORD: my-secret-pw
@@ -34,7 +31,7 @@ services:
       - "3306:3306"
     
     restart: always
-    
+
     volumes:
       - mariadb_volume_v2:/var/lib/mysql
 
@@ -42,9 +39,7 @@ services:
       - backend_mariadb
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: cooopeir/conint:latest
 
     depends_on:
       - mariadb
