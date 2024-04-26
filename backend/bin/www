@@ -10,11 +10,12 @@ async function waitForConnection(db) {
   }
 }
 
+
 function start() {
   var db = require('../db/db');
 
   waitForConnection(db)
-      .then(() => db.sync( { force: true } ))
+      .then(() => db.sync({ force: false })) 
       .then(() => console.log("All models were synchronized successfully."))
       .then(() => startServer());
 }

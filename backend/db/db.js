@@ -14,7 +14,7 @@ const models = [
 ];
 
 for (const model of models) {
-    model(db);
+    model(db, { force: false });
 }
 
 module.exports = db;

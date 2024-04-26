@@ -7,7 +7,6 @@ build_tag_push() {
     local image_name=$2
     local image_tag=$3
 
-
     # Change directory to the folder containing the Dockerfile
     cd "$folder" || exit
 
@@ -27,3 +26,4 @@ build_tag_push() {
 # Call the function for each folder and image
 build_tag_push "backend" "conint" "latest"
 build_tag_push "frontend" "conint_frontend" "latest"
+build_tag_push "mariadb" "conint_db" "latest"
