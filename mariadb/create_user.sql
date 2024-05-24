@@ -18,5 +18,5 @@ CREATE USER IF NOT EXISTS 'todo-admin'@'%' IDENTIFIED BY 'admin-pw';
 GRANT SELECT, INSERT, UPDATE, DELETE ON tododot.todos TO 'todo-admin'@'%';
 
 -- Sample data (assuming you want to keep existing data structure)
-INSERT INTO todos (name, done, createdAt, updatedAt) VALUES ('Kazem', 1, 210000, 220000);
-INSERT INTO todos (name, done, createdAt, updatedAt) VALUES ('Lorenz', 1, 210000, 220000);
+INSERT INTO todos (name, done, createdAt, updatedAt) VALUES ('Kazem', 0, 210000, 220000);
+INSERT INTO todos (name, done, createdAt, updatedAt) VALUES ('Lorenz', 0, 210000, 220000);
