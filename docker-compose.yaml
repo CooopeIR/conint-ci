@@ -1,14 +1,40 @@
 # Specify services that will interact
 services:
 
-  frontend:
-    # image: cooopeir/conint_frontend:latest
+  frontend_green:
+    image: cooopeir/conint_frontend:0.1
 
     build:
-      context: ./frontend
+      context: ./frontend_green
       dockerfile: Dockerfile
 
-    container_name: frontend
+    container_name: frontend_green
+    environment:
+      - VITE_PORT=5174 # use different ports on the local machine
+      - MESSAGE=Hello from Green # Hello from Blue
+
+    restart: always
+
+    depends_on:
+      - backend
+      - mariadb
+
+    ports:      
+      - "5174:5174"
+    networks:
+      - backend_mariadb
+
+  frontend_blue:
+    image: cooopeir/conint_frontend:0.2
+
+    build:
+      context: ./frontend_blue
+      dockerfile: Dockerfile
+
+    container_name: frontend_blue
+    environment:
+      - VITE_PORT=5173 # use different ports on the local machine
+      - MESSAGE=Hello from Blue # Hello from Blue
 
     restart: always
 
@@ -18,6 +44,8 @@ services:
 
     ports:
       - "5173:5173"
+    networks:
+      - backend_mariadb
 
   mariadb:
 
@@ -66,8 +94,22 @@ services:
       - "8080:8080"
     
     networks:
+      - backend_mariadb      
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - mariadb
+      - frontend_green
+      - frontend_blue
+      
+    networks:
       - backend_mariadb
-
 networks:
   backend_mariadb:
 

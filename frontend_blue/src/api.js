@@ -2,7 +2,9 @@ import axios from "axios";
 import posthog from "posthog-js";
 
 const readTodos = async () => {
+    console.log(`${import.meta.env.MESSAGE}`);
 
+  
     posthog.onFeatureFlags(function() {
         // feature flags should be available at this point
         if (posthog.isFeatureEnabled('my-flag') ) {
@@ -12,7 +14,6 @@ const readTodos = async () => {
         }
         })
   let res = await axios.get('http://localhost:8080/todos');
-    
   return res.data;
 }
 
