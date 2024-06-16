@@ -1,4 +1,4 @@
-iamge: docker:latest
+image: docker:latest
 
 services:
   - docker:dind
@@ -24,7 +24,7 @@ lint:
   script:
     - echo "Performing lint stage"
 
-static_analysis:
+static analysis:
   stage: static_analyis
   script:
     - echo "Performing static code analysis"
@@ -39,7 +39,6 @@ build_green:
   script:
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
-
 test:
   stage: test
   script:
@@ -48,6 +47,8 @@ test:
 
 deliver_blue:
   stage: deliver_blue
+    needs: 
+    - build_blue
   script:
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Blue to staging/production"
@@ -55,6 +56,8 @@ deliver_blue:
 
 deliver_green:
   stage: deliver_green
+  needs: 
+    - build_green
   script:
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Green to staging/production"
