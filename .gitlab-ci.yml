@@ -24,7 +24,7 @@ lint:
   script:
     - echo "Performing lint stage"
 
-static_analysis:
+static analysis:
   stage: static_analyis
   script:
     - echo "Performing static code analysis"
