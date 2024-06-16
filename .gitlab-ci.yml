@@ -47,7 +47,7 @@ test:
 
 deliver_blue:
   stage: deliver_blue
-    needs: 
+  needs: 
     - build_blue
   script:
     - docker push cooopeir/conint_frontend:blue
