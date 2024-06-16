@@ -131,7 +131,7 @@ deploy_backend:
   tags:
     - deploy
   script: 
-    - 
+    - docker push cooopeir/contint:latest
 
 deploy_blue:
   stage: deploy
