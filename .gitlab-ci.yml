@@ -1,0 +1,66 @@
+iamge: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - lint
+  - static analysis
+  - build
+  - test
+  - deliver
+  - deploy_blue
+  - deploy_green
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - docker info
+
+lint: 
+  stage: lint
+  script:
+    - echo "Performing lint stage"
+
+static_analysis:
+  stage: static_analyis
+  script:
+    - echo "Performing static code analysis"
+
+build_blue:
+  stage: build
+  script:
+    - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
+    - docker push cooopeir/conint_frontend:blue
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    # Add your test commands here
+
+deliver_blue:
+  stage: deliver_blue
+  script:
+    - echo "Deploying Blue to staging/production"
+    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for blue)
+
+deliver_green:
+  stage: deliver_green
+  script:
+    - echo "Deploying Green to staging/production"
+    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
+
+deploy_blue:
+  stage: deploy_blue
+  script:
+    - echo "Deploying Blue to staging/production"
+    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+
+deploy_green:
+  stage: deploy_green
+  script:
+    - echo "Deploying Green to staging/production"
+    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
