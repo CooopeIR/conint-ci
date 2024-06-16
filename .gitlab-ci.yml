@@ -17,8 +17,8 @@ stages:
 #   DOCKER_DRIVER: overlay2
 #   DOCKER_TLS_CERTDIR: ""
 
-before_script:
-  - docker info
+# before_script:
+#   - docker info
 
 lint: 
   stage: lint
@@ -79,6 +79,7 @@ deliver_blue:
   needs:
     - test_blue
   script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Blue to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for blue)
@@ -90,6 +91,7 @@ deliver_green:
   needs:
     - test_green
   script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Green to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
