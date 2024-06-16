@@ -21,40 +21,60 @@ before_script:
 
 lint: 
   stage: lint
+  tags:
+    - lint
   script:
     - echo "Performing lint stage"
 
 static analysis:
   stage: static analysis
+  tags:
+    - static analysis
   script:
     - echo "Performing static code analysis"
 
 build_blue:
   stage: build
+  tags:
+    - build
+  needs:
+    - lint
+    - static analysis
   script:
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
 
 build_green:
   stage: build
+  tags:
+    - build
+  needs:
+    - lint
+    - static analysis
   script:
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
 test_green:
   stage: test
+  tags:
+    - test
   script:
     - echo "Running tests on green..."
     # Add your test commands here
 
 test_blue:
   stage: test
+  tags:
+    - test
   script:
     - echo "Running tests on blue..."
     # Add your test commands here
 
 deliver_blue:
   stage: deliver
+  tags:
+    - deliver
   needs:
-    - build_blue
+    - test_blue
   script:
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Blue to staging/production"
@@ -62,8 +82,10 @@ deliver_blue:
 
 deliver_green:
   stage: deliver
+  tags:
+    - deliver
   needs:
-    - build_green
+    - test_green
   script:
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Green to staging/production"
@@ -71,12 +93,16 @@ deliver_green:
 
 deploy_blue:
   stage: deploy_blue
+  tags:
+    - deploy
   script:
     - echo "Deploying Blue to staging/production"
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
 
 deploy_green:
   stage: deploy_green
+  tags:
+    - deploy
   script:
     - echo "Deploying Green to staging/production"
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
