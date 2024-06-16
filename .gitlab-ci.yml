@@ -121,7 +121,6 @@ deliver_green:
   needs:
     - test_green
   script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:green
     - echo "Delivering Green to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
@@ -130,8 +129,8 @@ deploy_backend:
   stage: deploy
   tags:
     - deploy
-  script: 
-    - docker push cooopeir/contint:latest
+  script:
+    - docker push cooopeir/conint:latest
 
 deploy_blue:
   stage: deploy
