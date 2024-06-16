@@ -9,8 +9,7 @@ stages:
   - build
   - test
   - deliver
-  - deploy_blue
-  - deploy_green
+  - deploy
 
 # variables:
 #   DOCKER_HOST: tcp://docker:2375/
@@ -34,6 +33,17 @@ static analysis:
   script:
     - echo "Performing static code analysis"
 
+build_backend:
+  stage: build
+  tags:
+    - build
+  needs:
+    - lint
+    - static analysis
+  script:
+    - echo "build backend"
+    - docker build -t cooopeir/conint:latest ./backend
+
 build_blue:
   stage: build
   tags:
@@ -56,6 +66,14 @@ build_green:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
+test_backend:
+  stage: test
+  tags:
+    - test
+  script:
+    - echo "Running tests on backend..."
+  #   # Add your test commands here
+
 test_green:
   stage: test
   tags:
@@ -71,6 +89,18 @@ test_blue:
   script:
     - echo "Running tests on blue..."
   #   # Add your test commands here
+
+deliver_backend:
+  stage: deliver
+  tags:
+    - deliver
+  needs:
+    - test_backend
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push cooopeir/conint:latest
+    - echo "Delivering backend to staging/production"
+  #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
 
 deliver_blue:
   stage: deliver
@@ -92,12 +122,19 @@ deliver_green:
     - test_green
   script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push cooopeir/conint_frontend:blue
+    - docker push cooopeir/conint_frontend:green
     - echo "Delivering Green to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
 
+deploy_backend:
+  stage: deploy
+  tags:
+    - deploy
+  script: 
+    - 
+
 deploy_blue:
-  stage: deploy_blue
+  stage: deploy
   tags:
     - deploy
   script:
@@ -105,9 +142,25 @@ deploy_blue:
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
 
 deploy_green:
-  stage: deploy_green
+  stage: deploy
   tags:
     - deploy
   script:
     - echo "Deploying Green to staging/production"
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+
+update_nginx:
+  stage: deploy
+  tags:
+    - deploy
+  script:
+    - echo "Updating nginx configuration..."
+    - scp -i /path/to/your/private/key $NGINX_CONFIG_PATH ec2-user@blue_instance_ip:/tmp/nginx.conf
+    - ssh -i /path/to/your/private/key ec2-user@blue_instance_ip sudo mv /tmp/nginx.conf $NGINX_CONFIG_PATH
+    - ssh -i /path/to/your/private/key ec2-user@blue_instance_ip sudo systemctl reload nginx
+    - echo "Nginx configuration updated for blue instance"
+
+    - scp -i /path/to/your/private/key $NGINX_CONFIG_PATH ec2-user@green_instance_ip:/tmp/nginx.conf
+    - ssh -i /path/to/your/private/key ec2-user@green_instance_ip sudo mv /tmp/nginx.conf $NGINX_CONFIG_PATH
+    - ssh -i /path/to/your/private/key ec2-user@green_instance_ip sudo systemctl reload nginx
+    - echo "Nginx configuration updated for green instance"
