@@ -43,7 +43,7 @@ build_blue:
     - static analysis
   script:
     - echo "build blue"
-  #   - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
+    - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
 
 build_green:
   stage: build
@@ -54,7 +54,7 @@ build_green:
     - static analysis
   script:
     - echo "build green"
-  #   - docker build -t cooopeir/conint_frontend:green ./frontend_green
+    - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
 test_green:
   stage: test
@@ -79,7 +79,7 @@ deliver_blue:
   needs:
     - test_blue
   script:
-    # - docker push cooopeir/conint_frontend:blue
+    - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Blue to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for blue)
 
@@ -90,9 +90,8 @@ deliver_green:
   needs:
     - test_green
   script:
-    - echo "deliver_green"
-  #   - docker push cooopeir/conint_frontend:blue
-  #   - echo "Delivering Green to staging/production"
+    - docker push cooopeir/conint_frontend:blue
+    - echo "Delivering Green to staging/production"
   #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
 
 deploy_blue:
