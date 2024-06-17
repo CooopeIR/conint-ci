@@ -21,7 +21,6 @@ services:
     networks:
       - backend_frontend
     
-
   frontend_blue:
     image: cooopeir/conint_frontend:blue
     build:
