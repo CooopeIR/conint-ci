@@ -13,13 +13,13 @@ const readTodos = async () => {
             alert("Feature is enabled!");
         }
         })
-  let res = await axios.get('http://0.0.0.0:8080/todos');
+  let res = await axios.get('http://backend:8080/todos');
   return res.data;
 }
 
 const createTodo = async (name) => {
     let res = await axios.post(
-        'http://0.0.0.0:8080/todos',
+        'http://backend:8080/todos',
         {
             'name': name
         }
@@ -30,7 +30,7 @@ const createTodo = async (name) => {
 
 const doneTodo = async (id) => {
     let res = await axios.put(
-        `http://0.0.0.0:8080/todos/${id}/done`
+        `http://backend:8080/todos/${id}/done`
     );
 
     return res.data;
@@ -38,7 +38,7 @@ const doneTodo = async (id) => {
 
 const undoneTodo = async (id) => {
     let res = await axios.delete(
-        `http://0.0.0.0:8080/todos/${id}/done`
+        `http://backend:8080/todos/${id}/done`
     );
 
     return res.data;
