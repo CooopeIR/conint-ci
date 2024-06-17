@@ -42,7 +42,7 @@ function startServer() {
    * Get host from environment and store in Express.
    */
 
-  var host = normalizePort(process.env.HOST || 'localhost');
+  var host = normalizePort(process.env.HOST || 'backend');
   app.set('host', host);
 
   /**
