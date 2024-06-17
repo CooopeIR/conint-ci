@@ -12,7 +12,7 @@ services:
     environment:
       - VITE_PORT=5174 # use different ports on the local machine
       - MESSAGE=Hello from Green # Hello from Blue
-      - BACKEND_URL=
+
     restart: always
     depends_on:
       - backend
