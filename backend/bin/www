@@ -24,6 +24,8 @@ function startServer() {
   /**
    * Module dependencies.
    */
+  console.log(process.env.PORT);
+  console.log(process.env.HOST);
 
   var app = require('../app');
   var debug = require('debug')('backend:server');

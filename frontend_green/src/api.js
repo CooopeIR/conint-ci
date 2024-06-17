@@ -5,7 +5,6 @@ const readTodos = async () => {
     console.log(`${import.meta.env.MESSAGE}`);
 
 
-  
     posthog.onFeatureFlags(function() {
         // feature flags should be available at this point
         if (posthog.isFeatureEnabled('my-flag') ) {
