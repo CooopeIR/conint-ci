@@ -4,6 +4,7 @@ async function waitForConnection(db) {
   try {
     await db.authenticate();
   } catch (error) {
+    console.log(error);
     console.log('Could not connect, retrying in 1000 milliseconds...');
     await new Promise(resolve => setTimeout(resolve, 1000));
     await waitForConnection(db);
@@ -35,16 +36,16 @@ function startServer() {
    * Get port from environment and store in Express.
    */
 
-  // var port = normalizePort(process.env.PORT || '8080');
-  var port = normalizePort('8080');
+  var port = normalizePort(process.env.PORT || '8080');
+  // var port = normalizePort('8080');
   app.set('port', port);
 
   /**
    * Get host from environment and store in Express.
    */
 
-  // var host = normalizePort(process.env.HOST || 'backend');
-  var host = normalizePort('backend');
+  var host = normalizePort(process.env.HOST || 'backend');
+  // var host = normalizePort('backend');
   app.set('host', host);
 
   /**
