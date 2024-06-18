@@ -41,8 +41,8 @@ snyk-check:
   image: snyk/snyk-cli:docker
   script:
     - snyk auth $SNYK_TOKEN
-    - snyk test --all-projects
-    - snyk monitor --all-projects
+    - snyk test
+    - snyk monitor
   allow_failure: false
   only:
     - merge_requests
