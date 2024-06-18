@@ -5,39 +5,16 @@ services:
 
 stages:
   - lint
-  - static analysis
   - build
   - test
   - deliver
   - deploy
 
-# variables:
-#   DOCKER_HOST: tcp://docker:2375/
-#   DOCKER_DRIVER: overlay2
-#   DOCKER_TLS_CERTDIR: ""
 
-# before_script:
-#   - docker info
-
-lint: 
+sonarqube-check:
   stage: lint
   tags:
     - lint
-  script:
-    - echo "Performing lint stage"
-
-# static analysis:
-#   stage: static analysis
-#   tags:
-#     - static analysis
-#   script:
-#     - echo "Performing static code analysis"
-
-
-sonarqube-check:
-  stage: static analysis
-  tags:
-    - static analysis
   image: 
     name: sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
@@ -64,7 +41,6 @@ build_backend:
     - build
   needs:
     - lint
-    - sonarqube-check
   script:
     - echo "build backend"
     - docker build -t cooopeir/conint:latest ./backend
@@ -75,7 +51,6 @@ build_blue:
     - build
   needs:
     - lint
-    - sonarqube-check
   script:
     - echo "build blue"
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
@@ -86,7 +61,6 @@ build_green:
     - build
   needs:
     - lint
-    - sonarqube-check
   script:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
