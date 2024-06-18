@@ -5,7 +5,7 @@ services:
 
 stages:
   - lint
-  - static analysis
+  - sonarqube-check
   - build
   - test
   - deliver
@@ -35,7 +35,7 @@ lint:
 
 
 sonarqube-check:
-  stage: static analysis
+  stage: sonarqube-check
   image: 
     name: sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
@@ -62,7 +62,7 @@ build_backend:
     - build
   needs:
     - lint
-    - static analysis
+    - sonarqube-check
   script:
     - echo "build backend"
     - docker build -t cooopeir/conint:latest ./backend
@@ -73,7 +73,7 @@ build_blue:
     - build
   needs:
     - lint
-    - static analysis
+    - sonarqube-check
   script:
     - echo "build blue"
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
@@ -84,7 +84,7 @@ build_green:
     - build
   needs:
     - lint
-    - static analysis
+    - sonarqube-check
   script:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
