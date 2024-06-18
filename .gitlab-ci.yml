@@ -15,8 +15,8 @@ snyk-check:
   tags:
     - lint
   image:
-    - snyk/snyk-cli:docker
-    - entrypoint: [""]
+    name: snyk/snyk-cli:docker
+    entrypoint: [""]
   script:
     - docker build -t app:$CI_COMMIT_SHORT_SHA .
     - snyk auth $SNYK_TOKEN
