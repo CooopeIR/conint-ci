@@ -54,7 +54,8 @@ build_backend:
   tags:
     - build
   needs:
-    - lint
+    - sonarqube-check
+    - snyk-check
   script:
     - echo "build backend"
     - docker build -t cooopeir/conint:latest ./backend
@@ -64,7 +65,8 @@ build_blue:
   tags:
     - build
   needs:
-    - lint
+    - sonarqube-check
+    - snyk-check  
   script:
     - echo "build blue"
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
@@ -74,7 +76,8 @@ build_green:
   tags:
     - build
   needs:
-    - lint
+    - sonarqube-check
+    - snyk-check  
   script:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
