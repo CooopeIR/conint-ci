@@ -5,7 +5,7 @@ services:
 
 stages:
   - lint
-  - sonarqube-check
+  - static analysis
   - build
   - test
   - deliver
@@ -35,7 +35,9 @@ lint:
 
 
 sonarqube-check:
-  stage: sonarqube-check
+  stage: static analysis
+  tags:
+    - static analysis
   image: 
     name: sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
