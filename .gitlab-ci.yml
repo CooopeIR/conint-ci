@@ -27,12 +27,26 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: true
+  allow_failure: false
   only:
     - merge_requests
-    - master
     - main
-    - develop
+
+
+
+snyk-check:
+  stage: lint
+  tags:
+    - lint
+  image: snyk/snyk-cli:docker
+  script:
+    - snyk auth $SNYK_TOKEN
+    - snyk test --all-projects
+    - snyk monitor --all-projects
+  allow_failure: false
+  only:
+    - merge_requests
+    - main
 
 
 build_backend:
