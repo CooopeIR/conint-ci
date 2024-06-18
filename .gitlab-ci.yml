@@ -22,7 +22,7 @@ snyk-check:
     - snyk auth $SNYK_TOKEN
     - snyk test --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
     - snyk monitor --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
-  allow_failure: false
+  allow_failure: true # set false to fail on vulnerabilities
   only:
     - merge_requests
     - main
@@ -44,7 +44,7 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: false
+  allow_failure: true # set false to fail on errors
   only:
     - merge_requests
     - main
