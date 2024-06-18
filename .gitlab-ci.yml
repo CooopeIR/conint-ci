@@ -38,14 +38,12 @@ snyk-check:
   stage: lint
   tags:
     - lint
-  image:
-    name: snyk/snyk:docker
-    entrypoint: [""]
+  image: snyk/snyk-cli:docker
   script:
     - docker build -t app:$CI_COMMIT_SHORT_SHA .
     - snyk auth $SNYK_TOKEN
-    - snyk test
-    - snyk monitor
+    - snyk test --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
+    - snyk monitor --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
   allow_failure: false
   only:
     - merge_requests
