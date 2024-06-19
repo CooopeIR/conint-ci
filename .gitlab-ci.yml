@@ -107,13 +107,12 @@ test_blue:
   tags:
     - test
   script:
-    script:
-      - echo "Running tests on Vue.js frontend..."
-      - cd frontend_blue  # Change directory to your Vue.js project
-      - npm install  # Or 'yarn install' if you're using yarn
-      - npm run lint  # Run linter
-      - npm run test:unit  # Run unit tests
-      - npm run test:e2e  # Run end-to-end tests
+    - echo "Running tests on Vue.js frontend..."
+    - cd frontend_blue  # Change directory to your Vue.js project
+    - npm install  # Or 'yarn install' if you're using yarn
+    - npm run lint  # Run linter
+    - npm run test:unit  # Run unit tests
+    - npm run test:e2e  # Run end-to-end tests
 
 deliver_backend:
   stage: deliver
