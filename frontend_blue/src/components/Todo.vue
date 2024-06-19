@@ -1,29 +1,34 @@
 <template>
-<div class="todo-item" @click="done">
-  <span :class="{done: todo.done}">{{ todo.name }}</span>
-  <Checkmark :done="todo.done" />
-</div>
+  <div class="todo-item" @click="done">
+    <span :class="{ done: todo.done }">{{ todo.name }}</span>
+    <Checkmark :done="todo.done" />
+  </div>
 </template>
 
 <script>
 import Checkmark from "@/components/icons/Checkmark.vue";
 
+// Define the sum function
+export function sum(a, b) {
+  return a + b;
+}
+
 export default {
   name: "Todo",
-  components: {Checkmark},
+  components: { Checkmark },
   props: {
     todo: Object
   },
   methods: {
     done() {
       if (this.todo.done) {
-        this.$emit('undone', this.todo.id);
+        this.$emit("undone", this.todo.id);
       } else {
-        this.$emit('done', this.todo.id);
+        this.$emit("done", this.todo.id);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
