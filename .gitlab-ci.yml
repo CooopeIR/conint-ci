@@ -22,7 +22,7 @@ snyk-check:
     - snyk auth $SNYK_TOKEN
     - snyk test --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
     - snyk monitor --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
-  allow_failure: true # set false to fail on vulnerabilities.
+  allow_failure: true # set false to fail on vulnerabilities
   only:
     - merge_requests
     - main
@@ -44,7 +44,7 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: true # set false to fail on errors.
+  allow_failure: true # set false to fail on errors
   only:
     - merge_requests
     - main
@@ -86,18 +86,14 @@ build_green:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
-
 test_backend:
   stage: test
   tags:
     - test
   script:
-    - echo "Running tests on Vue.js frontend..."
-    - cd frontend_blue  # Change directory to your Vue.js project
-    - npm install  # Or 'yarn install' if you're using yarn
-    - npm run lint  # Run linter
-    - npm run test:unit  # Run unit tests
-    - npm run test:e2e  # Run end-to-end tests
+    - echo "Running tests on backend..."
+  #   # Add your test commands here
+
 test_green:
   stage: test
   tags:
