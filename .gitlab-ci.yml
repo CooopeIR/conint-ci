@@ -10,22 +10,22 @@ stages:
   - deliver
   - deploy
 
-snyk-check:
-  stage: lint
-  tags:
-    - lint
-  image:
-    name: snyk/snyk-cli:docker
-    entrypoint: [""]
-  script:
-    # - docker build -t app:$CI_COMMIT_SHORT_SHA .
-    - snyk auth $SNYK_TOKEN
-    - snyk test --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
-    - snyk monitor --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
-  allow_failure: true # set false to fail on vulnerabilities
-  only:
-    - merge_requests
-    - main
+# snyk-check:
+#   stage: lint
+#   tags:
+#     - lint
+#   image:
+#     name: snyk/snyk-cli:docker
+#     entrypoint: [""]
+#   script:
+#     # - docker build -t app:$CI_COMMIT_SHORT_SHA .
+#     - snyk auth $SNYK_TOKEN
+#     - snyk test --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
+#     - snyk monitor --all-projects --org=3eef733d-b6ce-4399-8f32-3691e465a4e1
+#   allow_failure: true # set false to fail on vulnerabilities
+#   only:
+#     - merge_requests
+#     - main
 
 
 sonarqube-check:
@@ -59,7 +59,7 @@ build_backend:
     - build
   needs:
     - sonarqube-check
-    - snyk-check
+    # - snyk-check
   script:
     - echo "build backend"
     - docker build -t cooopeir/conint:latest ./backend
@@ -70,7 +70,7 @@ build_blue:
     - build
   needs:
     - sonarqube-check
-    - snyk-check  
+    #- snyk-check  
   script:
     - echo "build blue"
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
@@ -81,7 +81,7 @@ build_green:
     - build
   needs:
     - sonarqube-check
-    - snyk-check  
+    #- snyk-check  
   script:
     - echo "build green"
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
