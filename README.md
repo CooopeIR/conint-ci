@@ -18,5 +18,5 @@ proxy_pass http://frontend_blue; # Change this to switch traffic to frontend_gre
 Change from BLUE to GREEN:
 proxy_pass http://frontend_green; # Change this to switch traffic to frontend_green
 
-then run:
+to reload run:
 docker-compose exec nginx nginx -s reload
