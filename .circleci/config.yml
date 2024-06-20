@@ -38,8 +38,8 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-        name: Print Current Directory
-        command: pwd
+          name: Print Current Directory
+          command: pwd
       - run:
           name: Test backend
           command: |
