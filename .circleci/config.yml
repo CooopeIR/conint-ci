@@ -11,7 +11,9 @@ jobs:
           command: npm install
       - run:
           name: Run tests
-          command: npm test
+          command: 
+            - cd backend
+            - npm test
 
   sonarqube-check:
     docker:
