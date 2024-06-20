@@ -55,7 +55,7 @@ build_backend:
   tags:
     - build
   needs:
-    - sonarqube-check
+    # - sonarqube-check
     # - snyk-check
   script:
     - echo "build backend"
@@ -67,7 +67,7 @@ build_blue:
   tags:
     - build
   needs:
-    - sonarqube-check
+    # - sonarqube-check
     # - snyk-check  
   script:
     - echo "build blue"
@@ -79,7 +79,7 @@ build_green:
   tags:
     - build
   needs:
-    - sonarqube-check
+    # - sonarqube-check
     # - snyk-check  
   script:
     - echo "build green"
