@@ -9,10 +9,7 @@ jobs:
       - run:
           name: npm Test Backend
           command: |
-            cd backend  # Navigate to the directory with package.json
             npm install
-            npm test
-            cd ..
   
   sonarqube-check:
     docker:
@@ -41,16 +38,20 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Build backend Docker image
-          command: |
-            TAG=latest
-            docker build -t $DOCKER_USERNAME/conint:$TAG .
+        name: Print Current Directory
+        command: pwd
       - run:
           name: Test backend
           command: |
             docker system prune -f
             npm install
             npm test
+      - run:
+          name: Build backend Docker image
+          command: |
+            TAG=latest
+            docker build -t $DOCKER_USERNAME/conint:$TAG .
+
       - run:
           name: Deliver backend
           command: |
