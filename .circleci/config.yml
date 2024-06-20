@@ -41,21 +41,16 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Print Current Directory
+          name: Change Current Directory
           command: |
-            ls
             pwd
             cd backend
-            pwd
-            ls
-      - run:
-          name: Test backend
-          command: |
-            docker system prune -f
             
       - run:
           name: Build backend Docker image
           command: |
+            cd backend
+            ls
             TAG=latest
             docker build -t $DOCKER_USERNAME/conint:$TAG .
 
