@@ -22,9 +22,9 @@ jobs:
           name: Run SonarQube Scanner
           command: |
             sonar-scanner \
-              -Dsonar.projectKey=YOUR_PROJECT_KEY \
+              -Dsonar.projectKey=CONINT-SonarQube \
               -Dsonar.sources=src \
-              -Dsonar.host.url=http://your-sonarqube-instance \
+              -Dsonar.host.url=http://sonarqube.zapto.org:9000 \
               -Dsonar.login=$SONAR_TOKEN
 
 workflows:
