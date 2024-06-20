@@ -21,11 +21,7 @@ jobs:
       - checkout
       - run:
           name: Run SonarQube Scanner
-          command: |
-            sonar-scanner
-              # -Dsonar.projectSettings=sonar-project.properties
-              # -Dsonar.host.url=$SONAR_HOST_URL \
-              # -Dsonar.login=$SONAR_TOKEN
+          command: sonar-scanner -Dsonar.projectSettings=sonar-project.properties
 
 workflows:
   version: 2
