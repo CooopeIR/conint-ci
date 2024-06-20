@@ -43,7 +43,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script: 
-    - sonar-scanner
+    - sonar-scanner -X
   allow_failure: false # set false to fail on errors
   only:
     - merge_requests
