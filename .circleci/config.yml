@@ -22,8 +22,9 @@ jobs:
           name: Run SonarQube Scanner
           command: |
             sonar-scanner \
-              -Dsonar.projectKey=CONINT-SonarQube \
-              -Dsonar.sources=src \
+              # -Dsonar.projectKey=CONINT-SonarQube \
+              # -Dsonar.sources=. \
+              -Dsonar.projectSettings=sonar-project.properties
               -Dsonar.host.url=$SONAR_HOST_URL \
               -Dsonar.login=$SONAR_TOKEN
 
