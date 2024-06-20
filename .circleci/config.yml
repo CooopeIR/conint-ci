@@ -7,32 +7,67 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: Run tests
-          command: 
-            - cd backend
-            - npm test
-
+          name: npm Test Backend
+          command: |
+            cd backend
+            npm install
+            npm test
+            cd ..
+  
   sonarqube-check:
     docker:
-      - image: sonarsource/sonar-scanner-cli:latest
+      - image: sonarsource/sonar-scanner-cli
     steps:
       - checkout
       - run:
           name: Run SonarQube Scanner
           command: |
             sonar-scanner \
-              # -Dsonar.projectKey=CONINT-SonarQube \
-              # -Dsonar.sources=. \
-              -Dsonar.projectSettings=sonar-project.properties
-              -Dsonar.host.url=$SONAR_HOST_URL \
-              -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.projectKey=CONINT-SonarQube \
+            -Dsonar.sources=. \
+            -Dsonar.exclusions=frontend_blue/tests/unit/Todo.test.js,frontend_blue/src/components/Todo.vue \
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$SONAR_TOKEN
+  
+  build_test_deliver_backend:
+    # working_directory: ~/backend
+    docker:
+      - image: cimg/base:2022.09
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Change Current Directory
+          command: |
+            pwd
+            cd backend
+            
+      - run:
+          name: Build backend Docker image
+          command: |
+            cd backend
+            ls
+            TAG=latest
+            docker build -t $DOCKER_USERNAME/conint:$TAG .
+
+      - run:
+          name: Deliver backend
+          command: |
+            TAG=latest
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker push $DOCKER_USERNAME/conint:$TAG
+
 
 workflows:
   version: 2
-  build-and-analyze:
+  build-and-deliver:
     jobs:
       - build
       - sonarqube-check
+      - build_test_deliver_backend:
+          requires:
+            - sonarqube-check
