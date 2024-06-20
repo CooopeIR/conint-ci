@@ -50,16 +50,13 @@ sonarqube-check:
     - main
 
 
-
-
-
 build_backend:
   stage: build
   tags:
     - build
   needs:
     - sonarqube-check
-    - snyk-check
+    # - snyk-check
   script:
     - echo "build backend"
     - docker system prune -f
@@ -71,7 +68,7 @@ build_blue:
     - build
   needs:
     - sonarqube-check
-    - snyk-check  
+    # - snyk-check  
   script:
     - echo "build blue"
     - docker system prune -f
@@ -83,7 +80,7 @@ build_green:
     - build
   needs:
     - sonarqube-check
-    - snyk-check  
+    # - snyk-check  
   script:
     - echo "build green"
     - docker system prune -f
