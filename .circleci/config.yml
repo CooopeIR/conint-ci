@@ -7,13 +7,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Open Backend Folder
+          command: cd backend
+      - run:
           name: Install dependencies
           command: npm install
       - run:
           name: Run tests
-          command: 
-            - cd backend
-            - npm test
+          command: npm test
 
   sonarqube-check:
     docker:
