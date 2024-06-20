@@ -112,7 +112,7 @@ test_blue:
     - test
   script:
     - echo "Running tests on Vue.js frontend..."
-    - docker system prune -f
+    # - docker system prune -f
     - cd frontend_blue  # Change directory to your Vue.js project
     - npm install  # Or 'yarn install' if you're using yarn
     - npm run test
