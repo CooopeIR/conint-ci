@@ -16,7 +16,7 @@ jobs:
   
   sonarqube-check:
     docker:
-      - image: sonarsource/sonar-scanner-cli:latest
+      - image: sonarsource/sonar-scanner-cli
     steps:
       - checkout
       - run:
@@ -29,55 +29,42 @@ jobs:
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$SONAR_TOKEN
   
-  build_backend:
+  build_test_deliver_backend:
+    working_directory: ~/backend
     docker:
-      - image: docker:19.03.12
+      - image: cimg/base:2022.09
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
-          name: Build Backend
+          name: Build backend Docker image
+          command: |
+            TAG=latest
+            docker build -t $DOCKER_USERNAME/circleci-new-docker-example:$TA
+      - run:
+          name: Test backend
           command: |
             docker system prune -f
-            docker build -t cooopeir/conint:latest ./backend
-
-  test_backend:
-    docker:
-      - image: docker:19.03.12
-    steps:
-      - checkout
+            npm install
+            npm test
       - run:
-          name: Test Backend
+          name: Deliver backend
           command: |
-            docker system prune -f
-            # Add your test commands here
-
-  deliver_backend:
-    docker:
-      - image: docker:19.03.12
-    steps:
-      - checkout
-      - run:
-          name: Deliver Backend
-          command: |
-            docker system prune -f
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            docker push cooopeir/conint:latest
-            echo "Delivering backend to staging/production"
-            # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
+            TAG=latest
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker push $DOCKER_USERNAME/conint:$TAG
 
 
 workflows:
   version: 2
-  build-and-analyze:
+  build-and-deliver:
     jobs:
       - build
       - sonarqube-check
-      - build_backend:
+      - build_test_deliver_backend:
           requires:
             - sonarqube-check
-      - test_backend:
-          requires:
-            - build_backend
-      - deliver_backend:
-          requires:
-            - test_backend
