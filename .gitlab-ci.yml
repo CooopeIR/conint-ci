@@ -155,11 +155,13 @@ deliver_green:
     - echo "Delivering Green to Docker Hub"
     - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push cooopeir/conint_frondtend:green
+    - docker push cooopeir/conint_frontend:green
 
 
 deploy_backend:
   stage: deploy
+  needs:
+    - deliver_backend
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
@@ -175,6 +177,8 @@ deploy_backend:
 
 deploy_blue:
   stage: deploy
+  needs:
+    - deliver_blue
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
@@ -189,6 +193,8 @@ deploy_blue:
 
 deploy_green:
   stage: deploy
+  needs:
+    - deliver_green
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
