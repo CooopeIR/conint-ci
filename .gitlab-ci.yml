@@ -3,6 +3,9 @@ image: docker:latest
 services:
   - docker:dind
 
+before_script:
+  - docker system prune -f  # Clean up any unused containers, networks, images (both dangling and unreferenced)
+
 stages:
   - lint
   - build
@@ -102,32 +105,20 @@ test_green:
     - echo "Running tests on green..."
   #   # Add your test commands here
 
+
 test_blue:
   stage: test
+  image: 
   tags:
     - test
-  image: node:14  # Use an official Node.js image
   script:
     - echo "Running tests on Vue.js frontend..."
     - cd frontend_blue  # Change directory to your Vue.js project
     - npm install  # Or 'yarn install' if you're using yarn
-    - npm run lint  # Run linter
-    - npm run test:unit  # Run unit tests
-    - npm run test:e2e  # Run end-to-end tests
-
-
-
-# test_blue:
-#   stage: test
-#   tags:
-#     - test
-#   script:
-#     - echo "Running tests on Vue.js frontend..."
-#     - cd frontend_blue  # Change directory to your Vue.js project
-#     - npm install  # Or 'yarn install' if you're using yarn
-#     - npm run lint  # Run linter
-#     - npm run test:unit  # Run unit tests
-#     - npm run test:e2e  # Run end-to-end tests
+    - npm run test
+    # - npm run lint  # Run linter
+    # - npm run test:unit  # Run unit tests
+    # - npm run test:e2e  # Run end-to-end tests
 
 deliver_backend:
   stage: deliver
