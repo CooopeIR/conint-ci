@@ -8,10 +8,6 @@
 <script>
 import Checkmark from "@/components/icons/Checkmark.vue";
 
-// Define the sum function
-export function sum(a, b) {
-  return a + b;
-}
 
 export default {
   name: "Todo",
