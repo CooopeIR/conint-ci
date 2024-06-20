@@ -27,7 +27,7 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.exclusions=frontend_blue/tests/unit/Todo.test.js,frontend_blue/src/components/Todo.vue \
             -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.token=$SONAR_TOKEN
   
   build_test_deliver_backend:
     # working_directory: ~/backend
