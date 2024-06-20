@@ -3,9 +3,6 @@ image: docker:latest
 services:
   - docker:dind
 
-before_script:
-  - docker system prune -f  # Clean up any unused containers, networks, images (both dangling and unreferenced)
-
 stages:
   - lint
   - build
@@ -65,6 +62,7 @@ build_backend:
     - snyk-check
   script:
     - echo "build backend"
+    - docker system prune -f
     - docker build -t cooopeir/conint:latest ./backend
 
 build_blue:
@@ -76,6 +74,7 @@ build_blue:
     - snyk-check  
   script:
     - echo "build blue"
+    - docker system prune -f
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
 
 build_green:
@@ -87,6 +86,7 @@ build_green:
     - snyk-check  
   script:
     - echo "build green"
+    - docker system prune -f
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
 test_backend:
@@ -95,6 +95,7 @@ test_backend:
     - test
   script:
     - echo "Running tests on backend..."
+    - docker system prune -f
   #   # Add your test commands here
 
 test_green:
@@ -103,6 +104,7 @@ test_green:
     - test
   script:
     - echo "Running tests on green..."
+    - docker system prune -f
   #   # Add your test commands here
 
 
@@ -113,6 +115,7 @@ test_blue:
     - test
   script:
     - echo "Running tests on Vue.js frontend..."
+    - docker system prune -f
     - cd frontend_blue  # Change directory to your Vue.js project
     - npm install  # Or 'yarn install' if you're using yarn
     - npm run test
@@ -127,6 +130,7 @@ deliver_backend:
   needs:
     - test_backend
   script:
+    - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint:latest
     - echo "Delivering backend to staging/production"
@@ -139,6 +143,7 @@ deliver_blue:
   needs:
     - test_blue
   script:
+    - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
     - echo "Delivering Blue to staging/production"
@@ -151,6 +156,7 @@ deliver_green:
   needs:
     - test_green
   script:
+    - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:green
     - echo "Delivering Green to staging/production"
@@ -162,6 +168,8 @@ deploy_backend:
     - deploy
   script:
     - echo "Deploying Backend to staging/production"
+    - docker system prune -f
+
 
 deploy_blue:
   stage: deploy
@@ -169,6 +177,7 @@ deploy_blue:
     - deploy
   script:
     - echo "Deploying Blue to staging/production"
+    - docker system prune -f
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
 
 deploy_green:
@@ -177,6 +186,8 @@ deploy_green:
     - deploy
   script:
     - echo "Deploying Green to staging/production"
+    - docker system prune -f
+
     # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
 
 update_nginx:
