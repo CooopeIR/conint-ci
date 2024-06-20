@@ -44,6 +44,8 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner -X
+      -Dsonar.host.url=$SONAR_HOST_URL
+      -Dsonar.login=$SONAR_TOKEN
   allow_failure: false # set false to fail on errors
   only:
     - merge_requests
