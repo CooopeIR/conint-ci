@@ -44,7 +44,7 @@ jobs:
           name: Build backend Docker image
           command: |
             TAG=latest
-            docker build -t $DOCKER_USERNAME/conint:$TAG
+            docker build -t $DOCKER_USERNAME/conint:$TAG .
       - run:
           name: Test backend
           command: |
