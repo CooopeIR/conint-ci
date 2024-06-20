@@ -140,11 +140,10 @@ deliver_blue:
   needs:
     - test_blue
   script:
+    - echo "Delivering Blue to Docker Hub"
     - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
-    - echo "Delivering Blue to staging/production"
-  #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for blue)
 
 deliver_green:
   stage: deliver
@@ -153,39 +152,54 @@ deliver_green:
   needs:
     - test_green
   script:
+    - echo "Delivering Green to Docker Hub"
     - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push cooopeir/conint_frontend:green
-    - echo "Delivering Green to staging/production"
-  #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
+    - docker push cooopeir/conint_frondtend:green
+
 
 deploy_backend:
   stage: deploy
-  tags:
-    - deploy
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Backend to staging/production"
-    - docker system prune -f
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 
 deploy_blue:
   stage: deploy
-  tags:
-    - deploy
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Blue to staging/production"
-    - docker system prune -f
-    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.18 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 deploy_green:
   stage: deploy
-  tags:
-    - deploy
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Green to staging/production"
-    - docker system prune -f
-
-    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.35 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 update_nginx:
   stage: deploy
