@@ -1,33 +1,57 @@
 version: 2.1
 
 jobs:
-  build:
-    docker:
-      - image: circleci/node:14
-    steps:
-      - checkout
-      - run:
-          name: npm Test Backend
-          command: |
-            cd backend  # Navigate to the directory with package.json
-            npm install
-            npm test
-            cd ..
-
   sonarqube-check:
+  docker:
+    - image: sonarsource/sonar-scanner-cli:latest
+  steps:
+    - checkout
+    - run:
+        name: Run SonarQube Scanner
+        command: |
+          sonar-scanner \
+          -Dsonar.projectKey=CONINT-SonarQube \
+          -Dsonar.sources=. \
+          -Dsonar.exclusions=frontend_blue/tests/unit/Todo.test.js,frontend_blue/src/components/Todo.vue \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
+  
+  build_backend:
     docker:
-      - image: sonarsource/sonar-scanner-cli:latest
+      - image: docker:19.03.12
     steps:
       - checkout
       - run:
-          name: Run SonarQube Scanner
+          name: Build Backend
           command: |
-            sonar-scanner \
-            -Dsonar.projectKey=CONINT-SonarQube \
-            -Dsonar.sources=. \
-            -Dsonar.exclusions=frontend_blue/tests/unit/Todo.test.js,frontend_blue/src/components/Todo.vue \
-            -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN
+            docker system prune -f
+            docker build -t cooopeir/conint:latest ./backend
+
+  test_backend:
+    docker:
+      - image: docker:19.03.12
+    steps:
+      - checkout
+      - run:
+          name: Test Backend
+          command: |
+            docker system prune -f
+            # Add your test commands here
+
+  deliver_backend:
+    docker:
+      - image: docker:19.03.12
+    steps:
+      - checkout
+      - run:
+          name: Deliver Backend
+          command: |
+            docker system prune -f
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            docker push cooopeir/conint:latest
+            echo "Delivering backend to staging/production"
+            # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
+
 
 workflows:
   version: 2
@@ -35,3 +59,12 @@ workflows:
     jobs:
       - build
       - sonarqube-check
+      - build_backend:
+          requires:
+            - sonarqube-check
+      - test_backend:
+          requires:
+            - build_backend
+      - deliver_backend:
+          requires:
+            - test_backend
