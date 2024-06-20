@@ -9,7 +9,10 @@ jobs:
       - run:
           name: npm Test Backend
           command: |
+            cd backend
             npm install
+            npm test
+            cd ..
   
   sonarqube-check:
     docker:
@@ -27,7 +30,7 @@ jobs:
             -Dsonar.login=$SONAR_TOKEN
   
   build_test_deliver_backend:
-    working_directory: ~/backend
+    # working_directory: ~/backend
     docker:
       - image: cimg/base:2022.09
         auth:
@@ -39,13 +42,17 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Print Current Directory
-          command: pwd
+          command: |
+            ls
+            pwd
+            cd backend
+            pwd
+            ls
       - run:
           name: Test backend
           command: |
             docker system prune -f
-            npm install
-            npm test
+            
       - run:
           name: Build backend Docker image
           command: |
