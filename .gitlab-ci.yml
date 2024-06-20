@@ -44,7 +44,7 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: true # set false to fail on errors
+  allow_failure: false # set false to fail on errors
   only:
     - merge_requests
     - main
