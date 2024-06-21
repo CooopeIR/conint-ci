@@ -16,6 +16,14 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    createdAt DATETIME NOT NULL,  -- New column for creation time
+    updatedAt DATETIME DEFAULT NULL -- New column for update time (nullable)
+);
+
 
 -- Create the user with appropriate privileges (assuming you already have a user 'root' with sufficient privileges)
 CREATE USER IF NOT EXISTS 'todo-admin'@'%' IDENTIFIED BY 'admin-pw';
@@ -30,3 +38,7 @@ INSERT INTO todos (name, done, createdAt, updatedAt) VALUES ('Lorenz', 0, 210000
 
 INSERT INTO users (username,password) VALUES ('Kazem','123');
 INSERT INTO users (username,password) VALUES ('Lorenz','123');
+
+
+
+-- mariadb-prod.c1gwkiqyc9gp.us-east-1.rds.amazonaws.com
