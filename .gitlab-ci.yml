@@ -173,7 +173,6 @@ deploy_backend:
     - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
         sudo docker compose -f /home/ubuntu/docker-compose.yml down
         sudo docker system prune -f
@@ -194,7 +193,6 @@ deploy_blue:
     - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.18 << 'EOF'
         sudo docker compose -f /home/ubuntu/docker-compose.yml down
         sudo docker system prune -f
@@ -213,12 +211,12 @@ deploy_green:
     - apt-get install -qq -y sshpass
     - export SSHPASS=$SSH_PASSWORD
   script:
-    - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
-    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.35 << 'EOF'
+    - echo "Deploying backend on 10.0.0.31..."
+    # SSH into the server and execute Docker commands
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
         sudo docker compose -f /home/ubuntu/docker-compose.yml down
         sudo docker system prune -f
-        sudo dockerc compose -f /home/ubuntu/docker-compose.yml up -d
+        sudo docker compose -f /home/ubuntu/docker-compose.yml up -d
       EOF
 
 update_nginx:
