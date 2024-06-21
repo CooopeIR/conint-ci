@@ -88,6 +88,7 @@ build_green:
 
 test_backend:
   stage: test
+  image: node:14
   tags:
     - test
   script:
@@ -97,6 +98,7 @@ test_backend:
 
 test_green:
   stage: test
+  image: node:14
   tags:
     - test
   script:
@@ -107,7 +109,7 @@ test_green:
 
 test_blue:
   stage: test
-  image: 
+  image: node:14
   tags:
     - test
   script:
