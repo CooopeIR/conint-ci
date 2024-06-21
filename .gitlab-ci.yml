@@ -160,6 +160,8 @@ deliver_green:
 
 deploy_backend:
   stage: deploy
+  tags:
+    - deploy
   needs:
     - deliver_backend
   before_script:
@@ -177,6 +179,8 @@ deploy_backend:
 
 deploy_blue:
   stage: deploy
+  tags:
+    - deploy
   needs:
     - deliver_blue
   before_script:
@@ -193,6 +197,8 @@ deploy_blue:
 
 deploy_green:
   stage: deploy
+  tags:
+    - deploy
   needs:
     - deliver_green
   before_script:
