@@ -103,7 +103,7 @@ test_green:
     - test
   script:
     - echo "Running tests on green..."
-    - docker system prune -f
+    # - docker system prune -f
   #   # Add your test commands here
 
 
@@ -170,6 +170,7 @@ deploy_backend:
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
+    - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
     - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
@@ -190,6 +191,7 @@ deploy_blue:
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
+    - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
     - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
@@ -209,6 +211,7 @@ deploy_green:
   before_script:
     - apt-get update -qq
     - apt-get install -qq -y sshpass
+    - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
     - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
