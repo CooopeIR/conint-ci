@@ -43,7 +43,7 @@ sonarqube-check:
     paths:
       - .sonar/cache
   script: 
-    - sonar-scanner -X
+    - sonar-scanner
   allow_failure: false # set false to fail on errors
   only:
     - merge_requests
@@ -59,7 +59,7 @@ build_backend:
     # - snyk-check
   script:
     - echo "build backend"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint:latest ./backend
 
 build_blue:
@@ -71,7 +71,7 @@ build_blue:
     # - snyk-check  
   script:
     - echo "build blue"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
 
 build_green:
@@ -83,20 +83,22 @@ build_green:
     # - snyk-check  
   script:
     - echo "build green"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
 test_backend:
   stage: test
+  image: cooopeir/conint:latest
   tags:
     - test
   script:
     - echo "Running tests on backend..."
-    - docker system prune -f
+    # - docker system prune -f
   #   # Add your test commands here
 
 test_green:
   stage: test
+  image: cooopeir/conint_frontend:green
   tags:
     - test
   script:
@@ -107,12 +109,12 @@ test_green:
 
 test_blue:
   stage: test
-  image: 
+  image: cooopeir/conint_frontend:blue
   tags:
     - test
   script:
     - echo "Running tests on Vue.js frontend..."
-    - docker system prune -f
+    # - docker system prune -f
     - cd frontend_blue  # Change directory to your Vue.js project
     - npm install  # Or 'yarn install' if you're using yarn
     - npm run test
@@ -127,7 +129,7 @@ deliver_backend:
   needs:
     - test_backend
   script:
-    - docker system prune -f
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint:latest
     - echo "Delivering backend to staging/production"
@@ -137,14 +139,13 @@ deliver_blue:
   stage: deliver
   tags:
     - deliver
-  needs:
-    - test_blue
+  # needs:
+  #   - test_blue
   script:
-    - docker system prune -f
+    - echo "Delivering Blue to Docker Hub"
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
-    - echo "Delivering Blue to staging/production"
-  #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for blue)
 
 deliver_green:
   stage: deliver
@@ -153,39 +154,69 @@ deliver_green:
   needs:
     - test_green
   script:
-    - docker system prune -f
+    - echo "Delivering Green to Docker Hub"
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:green
-    - echo "Delivering Green to staging/production"
-  #   # Add deployment steps here (e.g., SSH into EC2, pull and restart containers for green)
+
 
 deploy_backend:
   stage: deploy
+  image: ubuntu:latest
   tags:
     - deploy
+  needs:
+    - deliver_backend
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Backend to staging/production"
-    - docker system prune -f
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 
 deploy_blue:
   stage: deploy
+  image: ubuntu:latest
   tags:
     - deploy
+  needs:
+    - deliver_blue
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Blue to staging/production"
-    - docker system prune -f
-    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.18 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 deploy_green:
   stage: deploy
+  image: ubuntu:latest
   tags:
     - deploy
+  needs:
+    - deliver_green
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq -y sshpass
   script:
-    - echo "Deploying Green to staging/production"
-    - docker system prune -f
-
-    # Add deployment steps here (e.g., SSH into EC2, pull and restart containers)
+    - echo "Deploying backend..."
+    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
+    - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.35 << 'EOF'
+        docker-compose -f /home/ubuntu/docker-compose.yml down
+        docker system prune -f
+        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+      EOF
 
 update_nginx:
   stage: deploy
