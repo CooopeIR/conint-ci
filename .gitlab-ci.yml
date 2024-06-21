@@ -137,8 +137,8 @@ deliver_blue:
   stage: deliver
   tags:
     - deliver
-  needs:
-    - test_blue
+  # needs:
+  #   - test_blue
   script:
     - echo "Delivering Blue to Docker Hub"
     - docker system prune -f
