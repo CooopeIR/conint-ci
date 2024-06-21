@@ -59,7 +59,7 @@ build_backend:
     # - snyk-check
   script:
     - echo "build backend"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint:latest ./backend
 
 build_blue:
@@ -71,7 +71,7 @@ build_blue:
     # - snyk-check  
   script:
     - echo "build blue"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint_frontend:blue ./frontend_blue
 
 build_green:
@@ -83,7 +83,7 @@ build_green:
     # - snyk-check  
   script:
     - echo "build green"
-    - docker system prune -f
+    # - docker system prune -f
     - docker build -t cooopeir/conint_frontend:green ./frontend_green
 
 test_backend:
@@ -93,7 +93,7 @@ test_backend:
     - test
   script:
     - echo "Running tests on backend..."
-    - docker system prune -f
+    # - docker system prune -f
   #   # Add your test commands here
 
 test_green:
@@ -129,7 +129,7 @@ deliver_backend:
   needs:
     - test_backend
   script:
-    - docker system prune -f
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint:latest
     - echo "Delivering backend to staging/production"
@@ -143,7 +143,7 @@ deliver_blue:
   #   - test_blue
   script:
     - echo "Delivering Blue to Docker Hub"
-    - docker system prune -f
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:blue
 
@@ -155,7 +155,7 @@ deliver_green:
     - test_green
   script:
     - echo "Delivering Green to Docker Hub"
-    - docker system prune -f
+    # - docker system prune -f
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push cooopeir/conint_frontend:green
 
