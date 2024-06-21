@@ -173,7 +173,7 @@ deploy_backend:
     - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
+    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
         docker-compose -f /home/ubuntu/docker-compose.yml down
         docker system prune -f
