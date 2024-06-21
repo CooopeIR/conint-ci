@@ -175,9 +175,9 @@ deploy_backend:
     - echo "Deploying backend..."
     - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.31:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.31 << 'EOF'
-        docker-compose -f /home/ubuntu/docker-compose.yml down
-        docker system prune -f
-        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+        sudo docker compose -f /home/ubuntu/docker-compose.yml down
+        sudo docker system prune -f
+        sudo docker compose -f /home/ubuntu/docker-compose.yml up -d
       EOF
 
 
@@ -194,11 +194,11 @@ deploy_blue:
     - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
+    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.18:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.18 << 'EOF'
-        docker-compose -f /home/ubuntu/docker-compose.yml down
-        docker system prune -f
-        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+        sudo docker compose -f /home/ubuntu/docker-compose.yml down
+        sudo docker system prune -f
+        sudo docker compose -f /home/ubuntu/docker-compose.yml up -d
       EOF
 
 deploy_green:
@@ -214,11 +214,11 @@ deploy_green:
     - export SSHPASS=$SSH_PASSWORD
   script:
     - echo "Deploying backend..."
-    - sshpass -e scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
+    - sshpass -e scp -o StrictHostKeyChecking=no /home/ubuntu/docker-compose.yml ubuntu@10.0.0.35:/home/ubuntu/
     - sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@10.0.0.35 << 'EOF'
-        docker-compose -f /home/ubuntu/docker-compose.yml down
-        docker system prune -f
-        docker-compose -f /home/ubuntu/docker-compose.yml up -d
+        sudo docker compose -f /home/ubuntu/docker-compose.yml down
+        sudo docker system prune -f
+        sudo dockerc compose -f /home/ubuntu/docker-compose.yml up -d
       EOF
 
 update_nginx:
